@@ -11,6 +11,8 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var charactersTableView : UITableView!
+    @IBOutlet weak var activityIndicator : UIActivityIndicatorView!
+    
     
     var characterList : [CharacterInfo] = []
     
@@ -20,7 +22,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.charactersTableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
-        cell.nameLabel.text = self.characterList[indexPath.row].name
+        //cell.setInfo(name:  self.characterList[indexPath.row].name, imageUrl:  self.characterList[indexPath.row].image)
+        cell.setInfo(info: self.characterList[indexPath.row])
         return cell
         
     }
@@ -30,6 +33,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         charactersTableView.delegate = self
         charactersTableView.dataSource = self
+        
+        activityIndicator.center = self.view.center
+        activityIndicator.startAnimating()
         
         getCharacterList()
         // Do any additional setup after loading the view.
@@ -54,6 +60,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 DispatchQueue.main.async {
                     self.characterList.append(contentsOf: decoded.results)
                     self.charactersTableView.reloadData()
+                    self.activityIndicator.stopAnimating()
                 }
                 return
             }
@@ -61,7 +68,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 print("decoder.decode returned nil")
                 return
             }
-            
         }
         task.resume()
         

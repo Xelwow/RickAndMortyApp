@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CharacterInfo : Codable{
+class CharacterInfo : Codable{
     let id : Int
     let name : String
     let status : String
@@ -19,6 +19,7 @@ struct CharacterInfo : Codable{
     let image : String
     let origin : PlanetInfo
     let location : PlanetInfo
+    var imageData : Data?
     /*{
       "id": 1,
       "name": "Rick Sanchez",

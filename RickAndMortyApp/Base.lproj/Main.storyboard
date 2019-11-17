@@ -17,45 +17,72 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ub6-MW-myN">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ub6-MW-myN">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" name="BackgroundColor"/>
                                 <color key="sectionIndexBackgroundColor" name="BackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CharacterCell" rowHeight="80" id="qtc-Yi-ppX" customClass="CharacterCell" customModule="RickAndMortyApp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="80"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CharacterCell" rowHeight="134" id="qtc-Yi-ppX" customClass="CharacterCell" customModule="RickAndMortyApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="134"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qtc-Yi-ppX" id="Yfh-Pn-JfN">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="80"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="134"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jBb-mM-vzd">
-                                                    <rect key="frame" x="15" y="25" width="50" height="30"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="XdO-bS-YfP">
+                                                    <rect key="frame" x="15" y="10" width="150" height="114"/>
+                                                    <color key="backgroundColor" name="TextColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="110" id="95X-s3-UtR"/>
+                                                        <constraint firstAttribute="width" constant="150" id="xhS-cr-4ga"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xl1-gf-zGI">
+                                                    <rect key="frame" x="173" y="10" width="194" height="114"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                                    <color key="textColor" name="TextColor"/>
+                                                    <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <color key="backgroundColor" name="BackgroundColor"/>
                                             <constraints>
-                                                <constraint firstItem="jBb-mM-vzd" firstAttribute="leading" secondItem="Yfh-Pn-JfN" secondAttribute="leadingMargin" id="1QI-2M-Zrv"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="jBb-mM-vzd" secondAttribute="bottom" constant="14" id="FiW-Rf-iHk"/>
-                                                <constraint firstItem="jBb-mM-vzd" firstAttribute="top" secondItem="Yfh-Pn-JfN" secondAttribute="topMargin" constant="14" id="OaH-tr-iMI"/>
+                                                <constraint firstItem="Xl1-gf-zGI" firstAttribute="leading" secondItem="XdO-bS-YfP" secondAttribute="trailing" constant="8" id="3bI-eX-inC"/>
+                                                <constraint firstItem="XdO-bS-YfP" firstAttribute="top" secondItem="Yfh-Pn-JfN" secondAttribute="top" constant="10" id="HRe-hA-Tl8"/>
+                                                <constraint firstItem="XdO-bS-YfP" firstAttribute="leading" secondItem="Yfh-Pn-JfN" secondAttribute="leading" constant="15" id="K9x-iR-kwt"/>
+                                                <constraint firstItem="Xl1-gf-zGI" firstAttribute="top" secondItem="Yfh-Pn-JfN" secondAttribute="top" constant="10" id="Km8-jp-ZKe"/>
+                                                <constraint firstAttribute="bottom" secondItem="Xl1-gf-zGI" secondAttribute="bottom" constant="10" id="Kn2-ks-fkY"/>
+                                                <constraint firstAttribute="bottom" secondItem="XdO-bS-YfP" secondAttribute="bottom" constant="10" id="Yhg-ch-5Lj"/>
+                                                <constraint firstAttribute="trailing" secondItem="Xl1-gf-zGI" secondAttribute="trailing" constant="8" id="uGT-L9-F4j"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="BackgroundColor"/>
                                         <connections>
-                                            <outlet property="nameLabel" destination="jBb-mM-vzd" id="RDt-4o-Wmi"/>
+                                            <outlet property="characterImageView" destination="XdO-bS-YfP" id="gww-0D-ggE"/>
+                                            <outlet property="nameLabel" destination="Xl1-gf-zGI" id="adG-uO-Wa9"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rY6-L9-yqr">
+                                <rect key="frame" x="165" y="311" width="45" height="46"/>
+                                <color key="color" name="TextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" name="BackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="rY6-L9-yqr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="2SP-rb-JZc"/>
+                            <constraint firstItem="ub6-MW-myN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="92K-fe-ZLX"/>
+                            <constraint firstItem="ub6-MW-myN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MHq-bw-zyt"/>
+                            <constraint firstItem="rY6-L9-yqr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="311" id="NZc-ja-BOf"/>
+                            <constraint firstItem="rY6-L9-yqr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="165" id="Y0q-Gl-tUN"/>
+                            <constraint firstItem="ub6-MW-myN" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="dqm-BU-o0w"/>
+                            <constraint firstItem="ub6-MW-myN" firstAttribute="centerX" secondItem="rY6-L9-yqr" secondAttribute="centerX" id="lVo-Rf-bec"/>
+                            <constraint firstItem="ub6-MW-myN" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="vty-or-cnI"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="rY6-L9-yqr" id="Td7-vC-T26"/>
                         <outlet property="charactersTableView" destination="ub6-MW-myN" id="gMH-vV-xIp"/>
                     </connections>
                 </viewController>

@@ -70,8 +70,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         task.resume()
-        
-        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "characterInfo" {
+            (segue.destination as! CharacterInfoViewController).SetData(character: (sender as! CharacterCell).characterInfo!)
+        }
     }
 
 }

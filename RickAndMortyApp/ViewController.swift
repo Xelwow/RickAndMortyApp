@@ -33,6 +33,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         charactersTableView.delegate = self
         charactersTableView.dataSource = self
+        charactersTableView.isHidden = true
         
         activityIndicator.center = self.view.center
         activityIndicator.startAnimating()
@@ -60,6 +61,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 DispatchQueue.main.async {
                     self.characterList.append(contentsOf: decoded.results)
                     self.charactersTableView.reloadData()
+                    self.charactersTableView.isHidden = false
                     self.activityIndicator.stopAnimating()
                 }
                 return
@@ -74,7 +76,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "characterInfo" {
-            (segue.destination as! CharacterInfoViewController).SetData(character: (sender as! CharacterCell).characterInfo!)
+            (segue.destination as! CharacterInfoVC).setCharacterInfo(character: (sender as! CharacterCell).characterInfo!)
         }
     }
 

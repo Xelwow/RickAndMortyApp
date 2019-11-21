@@ -113,14 +113,6 @@ class CharactersListVC: UITableViewController{
         task.resume()
     }
     
-    func loadNewPage(){
-        downloadPageData(shouldDownloadNewData: true)
-    }
-    
-    func getCharacterList(){
-        downloadPageData(shouldDownloadNewData: false)
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "characterInfo" {
             (segue.destination as! CharacterInfoVC).setCharacterInfo(character: (sender as! CharacterCell).characterInfo!)

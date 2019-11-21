@@ -35,7 +35,6 @@ class CharactersListVC: UITableViewController{
         let deltaOffset = maximumOffset - currentOffset
         
         if deltaOffset <= 0 && !isUpdating{
-            print("update")
             isUpdating = true
             self.tableView.tableFooterView!.isHidden = false
             self.downloadMoreActivityIndicator.startAnimating()

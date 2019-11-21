@@ -23,6 +23,7 @@ class EpisodeView : UIView, UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    weak var characterInfo : CharacterInfo?
     var episodesHidden = true
     var episodes : [EpisodeInfo] = []
     
@@ -37,8 +38,14 @@ class EpisodeView : UIView, UITableViewDelegate, UITableViewDataSource {
     }
     
     
+    @objc func retryDownloadEpisodes(){
+        if let characterInfo = characterInfo {
+            getEpisodes(character: characterInfo)
+        }
+    }
     
     public func getEpisodes(character info : CharacterInfo){
+        self.characterInfo = info
         for episode in info.episode {
             let url = URL(string: episode)!
             let session = URLSession.shared
@@ -47,6 +54,10 @@ class EpisodeView : UIView, UITableViewDelegate, UITableViewDataSource {
                     print(error.localizedDescription)
                     DispatchQueue.main.async {
                         self.failedToDownloadLabel.isHidden = false
+                        self.episodesTableView.refreshControl?.endRefreshing()
+                        self.episodesTableView.refreshControl = UIRefreshControl()
+                        self.episodesTableView.refreshControl?.addTarget(self, action: #selector(self.retryDownloadEpisodes), for: .valueChanged)
+                        self.episodesTableView.refreshControl?.backgroundColor = self.episodesTableView.backgroundColor!
                     }
                     return
                 }
@@ -59,6 +70,7 @@ class EpisodeView : UIView, UITableViewDelegate, UITableViewDataSource {
                             self.episodes.sort(by: {(first, second) in return first.id < second.id})
                             self.episodesTableView.reloadData()
                             self.downloadingEpisodesActivityIndicator.stopAnimating()
+                            self.episodesTableView.refreshControl?.endRefreshing()
                             self.episodesTableView.tableFooterView?.isHidden = true
                         }
                     }
@@ -66,6 +78,10 @@ class EpisodeView : UIView, UITableViewDelegate, UITableViewDataSource {
                         print("decoder returned nil")
                         DispatchQueue.main.async {
                             self.failedToDownloadLabel.isHidden = false
+                            self.downloadingEpisodesActivityIndicator.stopAnimating()
+                            self.episodesTableView.refreshControl = UIRefreshControl()
+                            self.episodesTableView.refreshControl?.addTarget(self, action: #selector(self.retryDownloadEpisodes), for: .valueChanged)
+                            self.episodesTableView.refreshControl?.backgroundColor = self.episodesTableView.backgroundColor!
                         }
                         return
                     }

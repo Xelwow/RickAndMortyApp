@@ -11,10 +11,11 @@ import UIKit
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var charactersTableView : UITableView!
-    @IBOutlet weak var activityIndicator : UIActivityIndicatorView!
-    
+    @IBOutlet weak var downloadMoreActivityIndicator : UIActivityIndicatorView!
     
     var characterList : [CharacterInfo] = []
+    var nextPageURL : String = ""
+    var isUpdating = false
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return characterList.count
@@ -27,35 +28,56 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
         
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let currentOffset = scrollView.contentOffset.y
+        let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
+        let deltaOffset = maximumOffset - currentOffset
+        
+        if deltaOffset <= 0 && !isUpdating{
+            print("update")
+            isUpdating = true
+            self.charactersTableView.tableFooterView!.isHidden = false
+            self.downloadMoreActivityIndicator.startAnimating()
+            downloadPageData(shouldDownloadNewData: characterList.count > 0 ? true : false)
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         charactersTableView.delegate = self
-        charactersTableView.dataSource = self
-        
-        //activityIndicator.center = self.view.center
-        //activityIndicator.startAnimating()
+        charactersTableView.dataSource = self        
         
         charactersTableView.refreshControl = UIRefreshControl()
         charactersTableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating data")
         charactersTableView.refreshControl?.addTarget(self, action: #selector(self.refreshTableData), for: .valueChanged)
         charactersTableView.refreshControl?.backgroundColor = charactersTableView.backgroundColor!
-        //getCharacterList()
-        // Do any additional setup after loading the view.
     }
     
     @objc func refreshTableData(){
-        let url = URL(string: ApiInfo.getPage)!
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 5000
+        downloadPageData(shouldDownloadNewData: false)
+    }
+    
+    func downloadPageData(shouldDownloadNewData : Bool){
+        var url : URL?
+        if shouldDownloadNewData {
+            if nextPageURL.count > 0 {
+                url = URL(string: nextPageURL)
+            }
+            else {
+                return
+            }
+            
+        }
+        else{
+            url = URL(string: ApiInfo.getPage)
+        }
         let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
+        let task = session.dataTask(with: url!) { (data, response, error) in
             if let error = error {
-                DispatchQueue.main.async {
-                    self.charactersTableView.refreshControl?.endRefreshing()
-                }
                 print(error.localizedDescription)
+                self.downloadPageData(shouldDownloadNewData: shouldDownloadNewData)
                 return
             }
             if let data = data {
@@ -63,57 +85,44 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 let decoded = try? decoder.decode(GetPageResponse.self, from: data)
                 if let decoded = decoded {
                     DispatchQueue.main.async {
-                        self.characterList = decoded.results
+                        if shouldDownloadNewData {
+                            self.characterList.append(contentsOf: decoded.results)
+                        }
+                        else {
+                            self.characterList = decoded.results
+                            
+                        }
+                        if self.charactersTableView.tableFooterView!.isHidden{
+                            self.charactersTableView.refreshControl?.endRefreshing()
+                        }
+                        else {
+                            self.downloadMoreActivityIndicator.stopAnimating()
+                            self.charactersTableView.tableFooterView?.isHidden = true
+                            self.isUpdating = false
+                        }
                         self.charactersTableView.reloadData()
                         self.charactersTableView.isHidden = false
-                        self.activityIndicator.stopAnimating()
-                        self.charactersTableView.refreshControl?.endRefreshing()
+                        self.nextPageURL = decoded.info.next
+                        
                     }
                     return
                 }
                 else {
-                    DispatchQueue.main.async {
-                        self.charactersTableView.refreshControl?.endRefreshing()
-                    }
                     print("decoder.decode returned nil")
+                    self.downloadPageData(shouldDownloadNewData: shouldDownloadNewData)
                     return
                 }
             }
         }
         task.resume()
-        
+    }
+    
+    func loadNewPage(){
+        downloadPageData(shouldDownloadNewData: true)
     }
     
     func getCharacterList(){
-        let url = URL(string: ApiInfo.getPage)!
-        let request = URLRequest(url: url)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            guard data != nil else{
-                print("guard let data error")
-                return
-            }
-            let decoder = JSONDecoder()
-            let decoded = try? decoder.decode(GetPageResponse.self, from: data!)
-            if let decoded = decoded {
-                DispatchQueue.main.async {
-                    self.characterList.append(contentsOf: decoded.results)
-                    self.charactersTableView.reloadData()
-                    self.charactersTableView.isHidden = false
-                    self.activityIndicator.stopAnimating()
-                }
-                return
-            }
-            else {
-                print("decoder.decode returned nil")
-                return
-            }
-        }
-        task.resume()
+        downloadPageData(shouldDownloadNewData: false)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

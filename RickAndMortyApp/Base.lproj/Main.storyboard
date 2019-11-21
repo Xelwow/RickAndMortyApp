@@ -22,6 +22,20 @@
                                 <color key="backgroundColor" name="BackgroundColor"/>
                                 <color key="separatorColor" name="SubviewBackgroundColor"/>
                                 <color key="sectionIndexBackgroundColor" name="BackgroundColor"/>
+                                <view key="tableFooterView" contentMode="scaleToFill" id="nKz-9w-yqG">
+                                    <rect key="frame" x="0.0" y="190" width="375" height="44"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <subviews>
+                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="hAo-7y-a4T">
+                                            <rect key="frame" x="177.5" y="12" width="20" height="20"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <color key="backgroundColor" name="BackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="hAo-7y-a4T" firstAttribute="centerY" secondItem="nKz-9w-yqG" secondAttribute="centerY" id="fkB-a3-x4W"/>
+                                        <constraint firstItem="hAo-7y-a4T" firstAttribute="centerX" secondItem="nKz-9w-yqG" secondAttribute="centerX" id="m1c-20-T0H"/>
+                                    </constraints>
+                                </view>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CharacterCell" rowHeight="134" id="qtc-Yi-ppX" customClass="CharacterCell" customModule="RickAndMortyApp" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="134"/>
@@ -65,20 +79,12 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="rY6-L9-yqr">
-                                <rect key="frame" x="165" y="355" width="45" height="37"/>
-                                <color key="color" name="TextColor"/>
-                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" name="BackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="rY6-L9-yqr" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="2SP-rb-JZc"/>
                             <constraint firstItem="ub6-MW-myN" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="92K-fe-ZLX"/>
                             <constraint firstItem="ub6-MW-myN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="MHq-bw-zyt"/>
-                            <constraint firstItem="rY6-L9-yqr" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="311" id="NZc-ja-BOf"/>
-                            <constraint firstItem="rY6-L9-yqr" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="165" id="Y0q-Gl-tUN"/>
                             <constraint firstItem="ub6-MW-myN" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="dqm-BU-o0w"/>
-                            <constraint firstItem="ub6-MW-myN" firstAttribute="centerX" secondItem="rY6-L9-yqr" secondAttribute="centerX" id="lVo-Rf-bec"/>
                             <constraint firstItem="ub6-MW-myN" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="vty-or-cnI"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -87,8 +93,8 @@
                         <barButtonItem key="backBarButtonItem" title="To List" id="JlP-IF-Pae"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="rY6-L9-yqr" id="Td7-vC-T26"/>
                         <outlet property="charactersTableView" destination="ub6-MW-myN" id="gMH-vV-xIp"/>
+                        <outlet property="downloadMoreActivityIndicator" destination="hAo-7y-a4T" id="Rd8-Gu-Vig"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

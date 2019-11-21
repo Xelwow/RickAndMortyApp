@@ -26,16 +26,11 @@ class CharacterCell : UITableViewCell {
             }
         }
         else{
-            setImage(imageUrl: info.image)
+            setImage(imageUrl: info.image, characterInfo: info)
         }
     }
     
-    public func setInfo(name : String, imageUrl : String){
-            self.nameLabel.text = name
-            setImage(imageUrl: imageUrl)
-    }
-    
-    private func setImage(imageUrl : String){
+    private func setImage(imageUrl : String, characterInfo : CharacterInfo){
         characterImageView.image = nil
         let url = URL(string: imageUrl)!
         let request = URLRequest(url: url)
@@ -49,9 +44,10 @@ class CharacterCell : UITableViewCell {
                 let image = UIImage(data: data)
                 if let image = image {
                     DispatchQueue.main.async {
-                        print("setting image")
-                        self.characterImageView.image = image
-                        self.characterInfo?.imageData = data
+                        if characterInfo.id == self.characterInfo!.id{
+                            self.characterImageView.image = image
+                        }
+                        characterInfo.imageData = data
                     }
                 }
             }

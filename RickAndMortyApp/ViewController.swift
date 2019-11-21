@@ -33,13 +33,55 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         charactersTableView.delegate = self
         charactersTableView.dataSource = self
-        charactersTableView.isHidden = true
         
-        activityIndicator.center = self.view.center
-        activityIndicator.startAnimating()
+        //activityIndicator.center = self.view.center
+        //activityIndicator.startAnimating()
         
-        getCharacterList()
+        charactersTableView.refreshControl = UIRefreshControl()
+        charactersTableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating data")
+        charactersTableView.refreshControl?.addTarget(self, action: #selector(self.refreshTableData), for: .valueChanged)
+        charactersTableView.refreshControl?.backgroundColor = charactersTableView.backgroundColor!
+        //getCharacterList()
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func refreshTableData(){
+        let url = URL(string: ApiInfo.getPage)!
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 5000
+        let session = URLSession.shared
+        let task = session.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.charactersTableView.refreshControl?.endRefreshing()
+                }
+                print(error.localizedDescription)
+                return
+            }
+            if let data = data {
+                let decoder = JSONDecoder()
+                let decoded = try? decoder.decode(GetPageResponse.self, from: data)
+                if let decoded = decoded {
+                    DispatchQueue.main.async {
+                        self.characterList = decoded.results
+                        self.charactersTableView.reloadData()
+                        self.charactersTableView.isHidden = false
+                        self.activityIndicator.stopAnimating()
+                        self.charactersTableView.refreshControl?.endRefreshing()
+                    }
+                    return
+                }
+                else {
+                    DispatchQueue.main.async {
+                        self.charactersTableView.refreshControl?.endRefreshing()
+                    }
+                    print("decoder.decode returned nil")
+                    return
+                }
+            }
+        }
+        task.resume()
+        
     }
     
     func getCharacterList(){

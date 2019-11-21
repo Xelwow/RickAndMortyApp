@@ -10,5 +10,4 @@ import Foundation
 
 struct ApiInfo {
     static let getPage : String = "https://rickandmortyapi.com/api/character/"
-    
 }

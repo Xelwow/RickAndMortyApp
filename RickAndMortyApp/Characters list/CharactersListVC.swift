@@ -22,7 +22,6 @@ class CharactersListVC: UITableViewController{
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
-        //cell.setInfo(name:  self.characterList[indexPath.row].name, imageUrl:  self.characterList[indexPath.row].image)
         cell.setInfo(info: self.characterList[indexPath.row])
         
         return cell
@@ -35,10 +34,16 @@ class CharactersListVC: UITableViewController{
         let deltaOffset = maximumOffset - currentOffset
         
         if deltaOffset <= 0 && !isUpdating{
-            isUpdating = true
-            self.tableView.tableFooterView!.isHidden = false
-            self.downloadMoreActivityIndicator.startAnimating()
-            downloadPageData(shouldDownloadNewData: characterList.count > 0 ? true : false)
+            if characterList.count > 0 && nextPageURL == ""{
+                return
+            }
+            else{
+                isUpdating = true
+                self.tableView.tableFooterView!.isHidden = false
+                self.downloadMoreActivityIndicator.startAnimating()
+                downloadPageData(shouldDownloadNewData: characterList.count > 0 ? true : false)
+            }
+            
         }
     }
 

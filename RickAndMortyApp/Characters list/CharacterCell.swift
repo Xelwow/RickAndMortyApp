@@ -13,6 +13,8 @@ class CharacterCell : UITableViewCell {
     @IBOutlet weak var nameLabel : UILabel!
     @IBOutlet weak var characterImageView: UIImageView!
     
+    
+    
     var characterInfo : CharacterInfo?
     
     public func setInfo(info : CharacterInfo){
@@ -52,7 +54,7 @@ class CharacterCell : UITableViewCell {
                 }
             }
             else {
-                print()
+                print("Failed to download image")
                 return
             }
             

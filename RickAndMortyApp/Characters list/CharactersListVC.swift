@@ -8,28 +8,28 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CharactersListVC: UITableViewController{
     
-    @IBOutlet weak var charactersTableView : UITableView!
     @IBOutlet weak var downloadMoreActivityIndicator : UIActivityIndicatorView!
     
     var characterList : [CharacterInfo] = []
     var nextPageURL : String = ""
     var isUpdating = false
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return characterList.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.charactersTableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "CharacterCell", for: indexPath) as! CharacterCell
         //cell.setInfo(name:  self.characterList[indexPath.row].name, imageUrl:  self.characterList[indexPath.row].image)
         cell.setInfo(info: self.characterList[indexPath.row])
+        
         return cell
         
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let currentOffset = scrollView.contentOffset.y
         let maximumOffset = scrollView.contentSize.height - scrollView.frame.size.height
         let deltaOffset = maximumOffset - currentOffset
@@ -37,7 +37,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if deltaOffset <= 0 && !isUpdating{
             print("update")
             isUpdating = true
-            self.charactersTableView.tableFooterView!.isHidden = false
+            self.tableView.tableFooterView!.isHidden = false
             self.downloadMoreActivityIndicator.startAnimating()
             downloadPageData(shouldDownloadNewData: characterList.count > 0 ? true : false)
         }
@@ -46,13 +46,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        charactersTableView.delegate = self
-        charactersTableView.dataSource = self        
-        
-        charactersTableView.refreshControl = UIRefreshControl()
-        charactersTableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating data")
-        charactersTableView.refreshControl?.addTarget(self, action: #selector(self.refreshTableData), for: .valueChanged)
-        charactersTableView.refreshControl?.backgroundColor = charactersTableView.backgroundColor!
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.attributedTitle = NSAttributedString(string: "Updating data")
+        tableView.refreshControl?.addTarget(self, action: #selector(self.refreshTableData), for: .valueChanged)
+        tableView.refreshControl?.backgroundColor = tableView.backgroundColor!
     }
     
     @objc func refreshTableData(){
@@ -71,7 +68,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             
         }
         else{
-            url = URL(string: ApiInfo.getPage)
+            url = URL(string: "https://rickandmortyapi.com/api/character/")
         }
         let session = URLSession.shared
         let task = session.dataTask(with: url!) { (data, response, error) in
@@ -92,16 +89,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             self.characterList = decoded.results
                             
                         }
-                        if self.charactersTableView.tableFooterView!.isHidden{
-                            self.charactersTableView.refreshControl?.endRefreshing()
+                        if self.tableView.tableFooterView!.isHidden{
+                            self.tableView.refreshControl?.endRefreshing()
                         }
                         else {
                             self.downloadMoreActivityIndicator.stopAnimating()
-                            self.charactersTableView.tableFooterView?.isHidden = true
+                            self.tableView.tableFooterView?.isHidden = true
                             self.isUpdating = false
                         }
-                        self.charactersTableView.reloadData()
-                        self.charactersTableView.isHidden = false
+                        self.tableView.reloadData()
                         self.nextPageURL = decoded.info.next
                         
                     }

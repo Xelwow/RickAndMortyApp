@@ -29,9 +29,12 @@ class CharacterInfoVC : UIViewController, UITableViewDelegate, UITableViewDataSo
     @IBOutlet weak var episodeViewTop: NSLayoutConstraint!
     
     @IBOutlet weak var episodeViewTopToSafeZone: NSLayoutConstraint!
+    
+    @IBOutlet weak var downloadingEpisodesActivityIndicator : UIActivityIndicatorView!
+    
     weak var charInfo : CharacterInfo?
     
-    var shouldShowEpisodes = true
+    var episodesHidden = true
     var episodes : [EpisodeInfo] = []
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -60,36 +63,67 @@ class CharacterInfoVC : UIViewController, UITableViewDelegate, UITableViewDataSo
         }
         let mainInfoTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleMainInfoViewTap(_:)))
         let episodeViewTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleEpisodeViewTap(_:)))
-        
-        
+        let episodeInfoSwipeUpRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipe(_:)))
+        episodeInfoSwipeUpRecognizer.direction = .up
+        let episodeInfoSwipeDownRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.handleSwipe(_:)))
+        episodeInfoSwipeDownRecognizer.direction = .down
         mainInfoView.addGestureRecognizer(mainInfoTapRecognizer)
         episodesView.addGestureRecognizer(episodeViewTapRecognizer)
+        episodesView.addGestureRecognizer(episodeInfoSwipeUpRecognizer)
+        episodesView.addGestureRecognizer(episodeInfoSwipeDownRecognizer)
         episodesView.layer.cornerRadius = 20
         
         episodesTableView.delegate = self
         episodesTableView.dataSource = self
     }
     
-    @objc func handleMainInfoViewTap(_ sender : UITapGestureRecognizer? = nil){
-        if !shouldShowEpisodes {
-            episodeViewTopToSafeZone.priority = .defaultLow
-            episodeViewTop.priority = .required
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
+    @objc func handleSwipe(_ sender : UISwipeGestureRecognizer){
+        print("swipe")
+        switch sender.direction {
+        case UISwipeGestureRecognizer.Direction.up:
+            if episodesHidden {
+                showEpisodes()
             }
-            shouldShowEpisodes = true
+            break
+        case UISwipeGestureRecognizer.Direction.down:
+        if !episodesHidden {
+            hideEpisodes()
+        }
+        break
+        default:
+            break
+        }
+    }
+    
+    @objc func handleMainInfoViewTap(_ sender : UITapGestureRecognizer? = nil){
+        if !episodesHidden {
+            hideEpisodes()
         }
     }
     
     @objc func handleEpisodeViewTap(_ sender : UITapGestureRecognizer? = nil){
-        if shouldShowEpisodes {
-            episodeViewTopToSafeZone.priority = .required
-            episodeViewTop.priority = .defaultLow
-            UIView.animate(withDuration: 0.3) {
-                self.view.layoutIfNeeded()
-            }
-            shouldShowEpisodes = false
+        if episodesHidden {
+            showEpisodes()
         }
+    }
+    
+    func showEpisodes(){
+        episodeViewTopToSafeZone.priority = .required
+        episodeViewTop.priority = .defaultLow
+        episodesTableView.isUserInteractionEnabled = true
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+        episodesHidden = false
+    }
+    func hideEpisodes(){
+        episodeViewTopToSafeZone.priority = .defaultLow
+        episodeViewTop.priority = .required
+        episodesTableView.isUserInteractionEnabled = false
+        UIView.animate(withDuration: 0.25) {
+            self.view.layoutIfNeeded()
+        }
+        episodesHidden = true
     }
     
     public func setCharacterInfo(character info : CharacterInfo){
@@ -113,6 +147,8 @@ class CharacterInfoVC : UIViewController, UITableViewDelegate, UITableViewDataSo
                             self.episodes.append(decodedData)
                             self.episodes.sort(by: {(first, second) in return first.id < second.id})
                             self.episodesTableView.reloadData()
+                            self.downloadingEpisodesActivityIndicator.stopAnimating()
+                            self.episodesTableView.tableFooterView?.isHidden = true
                         }
                         
                     }
